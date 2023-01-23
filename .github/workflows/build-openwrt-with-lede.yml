@@ -13,7 +13,7 @@ on:
       openwrt_board:
         description: "Select Amlogic board"
         required: false
-        default: "all"
+        default: "s905l3a"
         type: choice
         options:
           - all
@@ -38,7 +38,7 @@ on:
       openwrt_kernel:
         description: "Select kernel version"
         required: false
-        default: "5.15.85_6.1.1"
+        default: "6.1.1"
         type: choice
         options:
           - 5.4.225_5.10.160_5.15.85
@@ -153,7 +153,7 @@ jobs:
           tag: ${{ steps.compile.outputs.build_tag }}
           artifacts: openwrt/bin/targets/*/*/*rootfs.tar.gz
           allowUpdates: true
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.RELEASE }}
 
       - name: Clean up server space
         if: ${{ steps.compile.outputs.status }} == 'success' && !cancelled()
@@ -172,7 +172,7 @@ jobs:
           auto_kernel: ${{ inputs.auto_kernel }}
           kernel_repo: ${{ inputs.kernel_repo }}
           openwrt_size: ${{ inputs.openwrt_size }}
-          gh_token: ${{ secrets.GH_TOKEN }}
+          gh_token: ${{ secrets.RELEASE }}
 
       - name: Upload the packaged firmware to Release
         uses: ncipollo/release-action@main
@@ -181,7 +181,7 @@ jobs:
           tag: ${{ steps.compile.outputs.build_tag }}
           artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
           allowUpdates: true
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.RELEASE }}
           body: |
             This is OpenWrt firmware for Amlogic s9xxx tv box
             * Firmware information
